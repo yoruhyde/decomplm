@@ -1,0 +1,14 @@
+Package: decomplm
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: person("Yue", "Meng", email = "mengyue616@gmail.com", role = c("aut", "cre"))
+Description: decomposition and aggregation for different type of linear mdoel.
+Depends:
+    R (>= 3.2.3),data.table,shiny,DT,rCharts,bit64,forecast
+License: What license is it under?
+LazyData: TRUE
+Imports:
+    data.table,shiny,DT,rCharts,bit64,forecast
+Remotes: ramnathv/rCharts
+RoxygenNote: 5.0.1

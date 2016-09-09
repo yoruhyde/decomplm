@@ -1,0 +1,5 @@
+layer,var,model
+1,web,"search,display,dts"
+2,search,gqv
+2,display,gqv
+2,dts,gqv

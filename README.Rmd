@@ -1,0 +1,39 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# lmdecomp
+A package for various type of linear model decomposition.
+
+## Installation
+
+You can install `lmdecomp` from `github` using the `devtools` package
+
+```coffee
+install.packages("devtools")
+require(devtools)
+install_github('xinzhou1023/lmdecomp')
+```
+## Example
+```coffee
+setwd("c:\\Users\\XinZhou\\Documents\\GitHub\\lmdecomp\\") # set work directory
+library(lmdecomp) # load package
+data=fread("input_data.csv") # load data
+var=fread("input_var.csv") # load variable coefficients
+
+result=decomp_log(
+  input_data=data,
+  input_var=var,
+  y="sales", # dependent variable name in input_data
+  y_m=NULL, # for ninah index process
+  date="week", # date variable name in input_data
+  cs=c("cs1","cs2"), # variable names for cross section in input_data; support multiple dimensions
+  sm_factor=0.9, # the smoother span of LOESS. This gives the proportion of points in the plot which influence the smooth at each value. Larger values give more smoothness.
+  is.output=F, # if True, then output decomp and contribution results to work directiory
+  is.index=F # for ninah index process
+)
+
+runApp(result$app) # activate output panel
+```
