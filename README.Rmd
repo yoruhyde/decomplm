@@ -14,7 +14,7 @@ You can install `lmdecomp` from `github` using the `devtools` package
 ```coffee
 install.packages("devtools")
 require(devtools)
-install_github('xinzhou1023/lmdecomp')
+install_github('yoruhyde/decomplm')
 ```
 ## Example
 ```coffee
