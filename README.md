@@ -1,13 +1,12 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+decomplm
+========
 
-# decomplm
 A package for various type of linear model decomposition.
 
-## Installation
+Installation
+------------
 
 You can install `decomplm` from `github` using the `devtools` package
 
@@ -17,10 +16,11 @@ require(devtools)
 install_github('yoruhyde/decomplm')
 library(decomplm) # load package
 ```
-## Example
 
-Usually, work directory, data_var and cs_var change everytime you setting up a new project. 
-Make sure double check them before running the code.
+Example
+-------
+
+Usually, work directory, data\_var and cs\_var change everytime you setting up a new project. Make sure double check them before running the code.
 
 ``` r
 setwd("C:\\Users\\yuemeng1\\Desktop\\code\\decomplm\\data") # set work directory
