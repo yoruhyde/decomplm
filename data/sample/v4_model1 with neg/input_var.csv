@@ -1,0 +1,23 @@
+cs,var,para,model,var_group
+cs 1,tv,0.046482272,gqv,TV
+cs 1,print,0.50106206,gqv,PRINT
+cs 2,tv,0.197674908,gqv,TV
+cs 2,print,0.447566499,gqv,PRINT
+cs 1,ps_imps,0.3546546,search,SEARCH
+cs 1,tv,0.146456,search,TV
+cs 1,gqv,0.880790088,search,GQV
+cs 2,ps_imps,0.45789,search,SEARCH
+cs 2,tv,0.2896,search,TV
+cs 2,gqv,0.656246873,search,GQV
+cs 1,disp_imps,0.254646887,display,DISPLAY
+cs 1,tv,0.438488677,display,TV
+cs 2,disp_imps,0.45664646,display,DISPLAY
+cs 2,tv,0.158487898,display,TV
+cs 1,tv,0.21,dts,TV
+cs 2,tv,0.1366,dts,TV
+cs 1,tv,0.546456422,sales,TV
+cs 1,web,0.34546479,sales,WEB
+cs 1,print,0.938339266,sales,PRINT
+cs 2,tv,0.487698465,sales,TV
+cs 2,web,0.76632589,sales,WEB
+cs 2,print,0.898203543,sales,PRINT

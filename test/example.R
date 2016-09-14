@@ -9,7 +9,7 @@ var=fread("input_var.csv") # load variable coefficients
 layer=fread("input_layer.csv") # load model structure
 
 date_var="week" # date variable name in input_data
-cs_var=c("cs") # variable names for cross section in input_data; support multiple dimensions
+cs_var=c("cs1","cs2") # variable names for cross section in input_data; support multiple dimensions
 
 
 

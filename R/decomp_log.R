@@ -160,8 +160,8 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
   # return
   if(checksum){
 
-    decomp=input_data[,c(cs,date,paste(y,"_actual",sep=""),var.list,"net_base"),with=F]
-    setnames(decomp,c(paste(y,"_actual",sep=""),"net_base"),c(y,"Base"))
+    decomp=input_data[,c(cs,date,paste(y,"_actual",sep=""),var.list,"sm_base"),with=F]
+    setnames(decomp,c(paste(y,"_actual",sep=""),"sm_base"),c(y,"Base"))
 
     # prepare table for shiny
     decomp.list=f_decomp_split(decomp,cs,y,date,input_var)

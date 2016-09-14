@@ -105,6 +105,10 @@ get_reduced_model=function(decomp_list,layer,input_var,cs,date,is.output=F,model
   var_lkup=data.table(var=var.list)
   var_lkup=merge(var_lkup,unique(input_var[,c("var","var_group"),with=F]),by=c("var"),all.x=T)
 
+  expr=paste(paste("ifelse(",var.list,"<0,",var.list,",0)"),collapse = "+")
+  expr=paste("Base:=Base+",expr,sep="")
+  decomp_reduced[,eval(parse(text=expr))]
+
   decomp.list=f_decomp_split(decomp=decomp_reduced,cs,y=model_name,date,input_var=var_lkup)
   # app=rshiny(decomp.list$con,decomp.list$decomp.chart,date,model_name)
   app=rshiny2(decomp.list$con,decomp.list$decomp.chart,date,model_name)

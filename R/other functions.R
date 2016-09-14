@@ -55,7 +55,10 @@ f_decomp_split=function(decomp,cs,y,date,input_var){
     }
   }
   var_name_all = c(var.name,paste(var.name,rep("_neg",length(var.name)),sep=""))
-  for.areachart[,c(var_name_all[sapply(var_name_all,f_ifzero,for.areachart)]):=NULL]
+  var_to_drop=c(var_name_all[sapply(var_name_all,f_ifzero,for.areachart)])
+  if(length(var_to_drop)!=0){
+    for.areachart[,c(var_to_drop):=NULL]
+  }
   for.export=for.areachart[cross_section!="All"]
   return(list(decomp.export=for.export,decomp.chart=for.areachart,con=temp.con))
 }
