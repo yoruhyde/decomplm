@@ -34,8 +34,8 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
   # is.index=F
   ################################################################################################
   # take var list
-  input_var=input_var[model==y]
-  var.list=unique(input_var[model==y,"var",with=F])$var
+  input_var=input_var[model_var==y]
+  var.list=unique(input_var[model_var==y,"var",with=F])$var
   # drop useless var
   input_data=input_data[,c(cs,date,y,y_m,var.list),with=F]
   # convert int to double
@@ -61,7 +61,7 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
   input_data[,eval(parse(text=expr))]
   index=which(sapply(input_data,is.integer))
   for (k in index) set(input_data, j=k, value=as.numeric(input_data[[k]]))
-  input_var[,':='(model=as.character(model),var=as.character(var),para=as.numeric(para))]
+  input_var[,':='(model_var=as.character(model_var),var=as.character(var),para=as.numeric(para))]
   expr=paste(cs,"=as.character(",cs,")")
   expr=paste(expr,collapse = ",")
   expr=paste("':='(",expr,")")
@@ -69,7 +69,7 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
 
   # calc initial decomp
   input_data_melt=melt.data.table(input_data,id.var=c(date,cs),value.name="raw",variable.name="var")
-  input_data_melt=merge(input_data_melt,input_var[,!"model",with=F],by=c(cs,"var"),all.x=T)
+  input_data_melt=merge(input_data_melt,input_var[,!c("model_var","model_name_group"),with=F],by=c(cs,"var"),all.x=T)
   input_data_melt[is.na(para),para:=0]
   input_data_melt[var %in% c(y,y_m,paste(y,"_actual",sep="")),para:=1]
   input_data_melt[,decomp:=raw*para]

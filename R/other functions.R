@@ -70,8 +70,8 @@ f_decomp_split=function(decomp,cs,y,date,input_var){
 }
 
 #' @export
-get_pec=function(decomp_list,model_name) {
-  working=decomp_list[[model_name]][,c(colnames(decomp_list[[model_name]])[!colnames(decomp_list[[model_name]]) %in% c(paste(model_name,"_dep",sep=""))]),with=F]
+get_pec=function(decomp_list,model_name,dep_var) {
+  working=decomp_list[[model_name]][,c(colnames(decomp_list[[model_name]])[!colnames(decomp_list[[model_name]]) %in% c(paste(dep_var,"_dep",sep=""))]),with=F]
   sub_var=c(colnames(working)[!colnames(working) %in% c(cs_var,date_var)])
   working_var=working[,sub_var,with=F]
   working_var=as.data.table(prop.table(as.matrix(working_var),1))

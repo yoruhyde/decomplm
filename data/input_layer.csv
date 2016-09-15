@@ -1,4 +1,4 @@
-layer,model,var_group,sm_factor,true_model
+layer,model_name_group,var_group,sm_factor,true_model
 1,sales,web,0.85,1
 2,web,"search,display,dts",,0
 3,search,gqv,0.87,1

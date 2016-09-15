@@ -18,6 +18,8 @@ get_log_decomp(input_data, input_var, input_layer)
 
 \item{layer}{is the set up file layer, which specified the structure of the model}
 
+\item{input_var}{a data.table class dataset for variable coefficient.}
+
 \item{cs}{a charactore vector for the cross section variable names in input_data. It could be more than one variable.}
 
 \item{date}{a charactor of the date variable name in input_data.}

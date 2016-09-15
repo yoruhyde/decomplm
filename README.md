@@ -48,6 +48,7 @@ decomp_list=get_log_decomp(input_data=data,
 
 result=get_reduced_model(decomp_list=decomp_list,
                          layer=layer,
+                         input_var=var,
                          cs=cs_var,
                          date=date_var,
                          is.output=T,

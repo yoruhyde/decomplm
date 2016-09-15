@@ -8,6 +8,7 @@
 #' get_reduced_model:
 #' @param decomp_list is from the result of get_decomp, it should be a list contains all the models' decomp
 #' @param layer is the set up file layer, which specified the structure of the model
+#' @param input_var a data.table class dataset for variable coefficient.
 #' @param cs a charactore vector for the cross section variable names in input_data. It could be more than one variable.
 #' @param date a charactor of the date variable name in input_data.
 #' @param is.output if TRUE, then output tabels to work directory. Default is False.
@@ -21,8 +22,8 @@
 #'
 #' @export
 get_log_decomp=function(input_data,input_var,input_layer) {
-  model_nm=input_layer[true_model==1,model]
-  model_fake=input_layer[true_model==0,model]
+  model_nm=input_layer[true_model==1,model_name_group]
+  model_fake=input_layer[true_model==0,model_name_group]
 
   if ((length(model_nm)+length(model_fake))==0) {
     print("Warning: You don't have any models in the layer set up. Please check input_layer")
@@ -31,11 +32,11 @@ get_log_decomp=function(input_data,input_var,input_layer) {
 
   decomp.list=list()
   for(i in 1:length(model_nm)) {
-    s_f=input_layer[model==model_nm[i],sm_factor]
+    s_f=input_layer[model_name_group==model_nm[i],sm_factor]
     decomp.list[[model_nm[i]]]=decomp_log(
       input_data=input_data,
       input_var=input_var,
-      y=model_nm[i], # dependent variable name in input_data
+      y=unique(input_var[model_name_group==model_nm[i],model_var]), # dependent variable name in input_data
       y_m=NULL, # for ninah index process
       date=date_var, # date variable name in input_data
       cs=cs_var, # variable names for cross section in input_data; support multiple dimensions
@@ -47,9 +48,13 @@ get_log_decomp=function(input_data,input_var,input_layer) {
     temp=list()
     model_fake_dep=paste(model_fake,"_dep",sep="")
     for(i in 1:length(model_fake)) {
-      var_split=input_layer[model==model_fake[i],var_group]
+      var_split=input_layer[model_name_group==model_fake[i],var_group]
       var_split=strsplit(var_split,",")[[1]]
-      var_split_dep=paste(var_split,"_dep",sep="")
+      f_getdep=function(x,input_var) {
+        return(unique(input_var[model_name_group==x,model_var]))
+      }
+      var_split_dep=sapply(var_split,f_getdep,input_var)
+      var_split_dep=paste(var_split_dep,"_dep",sep="")
       for(j in 1:length(var_split_dep)) {
         temp[[j]]=decomp.list[[var_split[j]]][,c(cs_var,date_var,var_split_dep[j]),with=F]
       }
@@ -60,13 +65,15 @@ get_log_decomp=function(input_data,input_var,input_layer) {
       setnames(decomp.list[[model_fake[i]]],c(var_split_dep),c(var_split))
     }
   }
+  decomp.list$fake_model=model_fake
+  decomp.list$true_model=model_nm
 
   return(decomp.list)
 }
 
 
 #' @export
-get_reduced_model=function(decomp_list,layer,cs,date,is.output=F,model_name=NULL) {
+get_reduced_model=function(decomp_list,layer,input_var=var,cs,date,is.output=F,model_name=NULL) {
   layer[,var_group:=as.character(var_group)]
   for (i in nrow(layer):1) {
     if(layer[i, var_group] == "" |is.na(layer[i, var_group])) {
@@ -75,8 +82,15 @@ get_reduced_model=function(decomp_list,layer,cs,date,is.output=F,model_name=NULL
       psthru_var=strsplit(layer[i,var_group],",")[[1]]
       temp_psthru=list()
       for(j in 1:length(psthru_var)) {
+        if (psthru_var[j] %in% decomp_list$fake_model) {
+          dependent=psthru_var[j]
+        } else {
+          dependent=unique(input_var[model_name_group==psthru_var[j],model_var])
+        }
         tryCatch({
-          temp_psthru[[psthru_var[j]]] = get_pec(decomp_list,model_name=psthru_var[j])
+          temp_psthru[[psthru_var[j]]] =
+            get_pec(decomp_list,model_name=psthru_var[j],
+                    dep_var=dependent)
         }, error = function(e) {
           stop(paste(psthru_var[j]," model is not in your decomp list. Please check set up files.",sep=""))
         }, finally={
@@ -87,7 +101,7 @@ get_reduced_model=function(decomp_list,layer,cs,date,is.output=F,model_name=NULL
       percent=Reduce(rbind,temp_psthru)
 
       #pass thru into main model
-      temp_keep=decomp_list[[layer[i,model]]]
+      temp_keep=decomp_list[[layer[i,model_name_group]]]
       temp_pass=temp_keep[,c(cs_var,date_var,psthru_var),with=F]
       temp_keep=temp_keep[,c(colnames(temp_keep)[!colnames(temp_keep) %in% c(psthru_var)]),with=F]
       temp_pass=melt.data.table(temp_pass,id.vars = c(cs_var,date_var),variable.name="model",value.name = "final")
@@ -103,12 +117,13 @@ get_reduced_model=function(decomp_list,layer,cs,date,is.output=F,model_name=NULL
       final_ps=dcast.data.table(temp,fml,fun.aggregate = sum,value.var = "final")
 
       #renew_decomp_list
-      decomp_list[[layer[i,model]]]=final_ps
+      decomp_list[[layer[i,model_name_group]]]=final_ps
     }
   }
   if(is.null(model_name)) {
-    model_name=layer[1,model]
+    model_name=layer[1,model_name_group]
   }
+  model_name_dep=unique(input_var[model_name_group==model_name,model_var])
   model_name_dep=paste(model_name,"_dep",sep="")
   decomp_reduced=decomp_list[[model_name]]
   var.list=colnames(decomp_reduced)[!colnames(decomp_reduced) %in% c(cs,date,model_name_dep,"Base")]
