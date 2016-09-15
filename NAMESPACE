@@ -3,7 +3,7 @@
 export(area.hchart)
 export(decomp_log)
 export(f_decomp_split)
-export(get_decomp)
+export(get_log_decomp)
 export(get_pec)
 export(get_reduced_model)
 export(rshiny)

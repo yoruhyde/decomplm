@@ -1,4 +1,5 @@
-#' get_decomp:
+#' get_log_decomp:
+#' calculate the decomp for all true & fake models & sub-models by using the algorithm described in 'decomp_log'
 #' @param input_data a data.table class dataset for modeling.
 #' @param input_var a data.table class dataset for variable coefficient.
 #' @param input_layer a data.table class dataset for model structure.
@@ -6,7 +7,12 @@
 #'
 #' get_reduced_model:
 #' @param decomp_list is from the result of get_decomp, it should be a list contains all the models' decomp
-#' @param structure is the set up file layer, which specified the structure of the model
+#' @param layer is the set up file layer, which specified the structure of the model
+#' @param cs a charactore vector for the cross section variable names in input_data. It could be more than one variable.
+#' @param date a charactor of the date variable name in input_data.
+#' @param is.output if TRUE, then output tabels to work directory. Default is False.
+#' @param model_name if NULL, then output the passed-thru model on the first layer from input_layer.
+#'        Specific the model_name if need. I.E. model_name="web"
 #' @return a list of modeling result. It contains the following components:
 #'    contribution: contribution table;
 #'    decomp: decomp table;
@@ -14,7 +20,7 @@
 #'    app: a shiny app;
 #'
 #' @export
-get_decomp=function(input_data,input_var,input_layer) {
+get_log_decomp=function(input_data,input_var,input_layer) {
   model_nm=input_layer[true_model==1,model]
   model_fake=input_layer[true_model==0,model]
 
@@ -34,21 +40,24 @@ get_decomp=function(input_data,input_var,input_layer) {
       date=date_var, # date variable name in input_data
       cs=cs_var, # variable names for cross section in input_data; support multiple dimensions
       sm_factor=s_f
-    )$decomp_detail
+    )$decomp
   }
 
   if(length(model_fake)!=0) {
     temp=list()
+    model_fake_dep=paste(model_fake,"_dep",sep="")
     for(i in 1:length(model_fake)) {
-      var_split=input_layer[model==model_fake[i],var]
+      var_split=input_layer[model==model_fake[i],var_group]
       var_split=strsplit(var_split,",")[[1]]
-      for(j in 1:length(var_split)) {
-        temp[[j]]=decomp.list[[var_split[j]]][,c(cs_var,date_var,var_split[j]),with=F]
+      var_split_dep=paste(var_split,"_dep",sep="")
+      for(j in 1:length(var_split_dep)) {
+        temp[[j]]=decomp.list[[var_split[j]]][,c(cs_var,date_var,var_split_dep[j]),with=F]
       }
       decomp.list[[model_fake[i]]]=Reduce(function(...) merge(...,by=c(cs_var,date_var),all=T),temp)
-      expr=paste(var_split,collapse = "+")
-      expr=parse(text=paste(model_fake[i],":=",expr,sep=""))
+      expr=paste(var_split_dep,collapse = "+")
+      expr=parse(text=paste(model_fake_dep[i],":=",expr,sep=""))
       decomp.list[[model_fake[i]]][,eval(expr)]
+      setnames(decomp.list[[model_fake[i]]],c(var_split_dep),c(var_split))
     }
   }
 
@@ -57,13 +66,13 @@ get_decomp=function(input_data,input_var,input_layer) {
 
 
 #' @export
-get_reduced_model=function(decomp_list,layer,input_var,cs,date,is.output=F,model_name=NULL) {
-  layer[,var:=as.character(var)]
+get_reduced_model=function(decomp_list,layer,cs,date,is.output=F,model_name=NULL) {
+  layer[,var_group:=as.character(var_group)]
   for (i in nrow(layer):1) {
-    if(layer[i, var] == "" |is.na(layer[i, var])) {
+    if(layer[i, var_group] == "" |is.na(layer[i, var_group])) {
       next
     } else {
-      psthru_var=strsplit(layer[i,var],",")[[1]]
+      psthru_var=strsplit(layer[i,var_group],",")[[1]]
       temp_psthru=list()
       for(j in 1:length(psthru_var)) {
         tryCatch({
@@ -100,18 +109,19 @@ get_reduced_model=function(decomp_list,layer,input_var,cs,date,is.output=F,model
   if(is.null(model_name)) {
     model_name=layer[1,model]
   }
+  model_name_dep=paste(model_name,"_dep",sep="")
   decomp_reduced=decomp_list[[model_name]]
-  var.list=colnames(decomp_reduced)[!colnames(decomp_reduced) %in% c(cs,date,model_name,"Base")]
-  var_lkup=data.table(var=var.list)
-  var_lkup=merge(var_lkup,unique(input_var[,c("var","var_group"),with=F]),by=c("var"),all.x=T)
+  var.list=colnames(decomp_reduced)[!colnames(decomp_reduced) %in% c(cs,date,model_name_dep,"Base")]
+  var_lkup=data.table(var=var.list,var_group=var.list)
+  # var_lkup=merge(var_lkup,unique(input_var[,c("var","var_group"),with=F]),by=c("var"),all.x=T)
 
   expr=paste(paste("ifelse(",var.list,"<0,",var.list,",0)"),collapse = "+")
   expr=paste("Base:=Base+",expr,sep="")
   decomp_reduced[,eval(parse(text=expr))]
 
-  decomp.list=f_decomp_split(decomp=decomp_reduced,cs,y=model_name,date,input_var=var_lkup)
+  decomp.list=f_decomp_split(decomp=decomp_reduced,cs,y=model_name_dep,date,input_var=var_lkup)
   # app=rshiny(decomp.list$con,decomp.list$decomp.chart,date,model_name)
-  app=rshiny2(decomp.list$con,decomp.list$decomp.chart,date,model_name)
+  app=rshiny2(decomp.list$con,decomp.list$decomp.chart,date,model_name_dep)
 
   if (is.output){
     write.csv(decomp.list$decomp.export,"output_decomp.csv",row.names = F)

@@ -44,6 +44,12 @@ f_decomp_split=function(decomp,cs,y,date,input_var){
   temp[,eval(parse(text=expr))]
   for.areachart=temp[,!var.name.new,with=F]
 
+  var_name_all = c(var.name,paste(var.name,rep("_neg",length(var.name)),sep=""))
+  for.areachart=for.areachart[cross_section!="All"]
+  for.areachart.date=for.areachart[,lapply(.SD,sum),by=c(date),.SDcols=c(y,"Base",var_name_all)]
+  for.areachart.date$cross_section="All"
+  for.areachart=rbind(for.areachart.date,for.areachart)
+
 
 
   # delete 0 columns
@@ -54,18 +60,18 @@ f_decomp_split=function(decomp,cs,y,date,input_var){
       return(T)
     }
   }
-  var_name_all = c(var.name,paste(var.name,rep("_neg",length(var.name)),sep=""))
+
   var_to_drop=c(var_name_all[sapply(var_name_all,f_ifzero,for.areachart)])
   if(length(var_to_drop)!=0){
     for.areachart[,c(var_to_drop):=NULL]
   }
-  for.export=for.areachart[cross_section!="All"]
-  return(list(decomp.export=for.export,decomp.chart=for.areachart,con=temp.con))
+  # for.export=for.areachart[cross_section!="All"]
+  return(list(decomp.export=export,decomp.chart=for.areachart,con=temp.con))
 }
 
 #' @export
 get_pec=function(decomp_list,model_name) {
-  working=decomp_list[[model_name]][,c(colnames(decomp_list[[model_name]])[!colnames(decomp_list[[model_name]]) %in% c(model_name)]),with=F]
+  working=decomp_list[[model_name]][,c(colnames(decomp_list[[model_name]])[!colnames(decomp_list[[model_name]]) %in% c(paste(model_name,"_dep",sep=""))]),with=F]
   sub_var=c(colnames(working)[!colnames(working) %in% c(cs_var,date_var)])
   working_var=working[,sub_var,with=F]
   working_var=as.data.table(prop.table(as.matrix(working_var),1))

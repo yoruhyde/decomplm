@@ -1,14 +1,14 @@
 model,cs1,cs2,var,para,var_group
-sales,a,cs 1,tv,0.141554437,TV
-sales,a,cs 1,web,0.434813441,Web
-sales,a,cs 2,tv,0.08571605,TV
-sales,a,cs 2,web,0.410498285,Web
-sales,a,cs 3,tv,-0.01244701,TV
-sales,a,cs 3,web,0.477650773,Web
-sales,a,cs 4,tv,0.200750027,TV
-sales,a,cs 4,web,0.420794141,Web
-sales,a,cs 5,tv,0.11466622,TV
-sales,a,cs 5,web,0.521380402,Web
+sales,a,cs 1,tv,0.141554437,tv
+sales,a,cs 1,web,0.434813441,web
+sales,a,cs 2,tv,0.08571605,tv
+sales,a,cs 2,web,0.410498285,web
+sales,a,cs 3,tv,-0.01244701,tv
+sales,a,cs 3,web,0.477650773,web
+sales,a,cs 4,tv,0.200750027,tv
+sales,a,cs 4,web,0.420794141,web
+sales,a,cs 5,tv,0.11466622,tv
+sales,a,cs 5,web,0.521380402,web
 web,a,cs 1,search,0.5,Search
 web,a,cs 2,search,0.5,Search
 web,a,cs 3,search,0.5,Search

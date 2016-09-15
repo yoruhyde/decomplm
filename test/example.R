@@ -9,20 +9,19 @@ var=fread("input_var.csv") # load variable coefficients
 layer=fread("input_layer.csv") # load model structure
 
 date_var="week" # date variable name in input_data
-cs_var=c("cs1","cs2") # variable names for cross section in input_data; support multiple dimensions
+cs_var=c("cs") # variable names for cross section in input_data; support multiple dimensions
 
 
 
 ########################################################
 
 
-decomp_list=get_decomp(input_data=data,
+decomp_list=get_log_decomp(input_data=data,
                        input_var=var,
                        input_layer=layer)
 
 result=get_reduced_model(decomp_list=decomp_list,
                          layer=layer,
-                         input_var=var,
                          cs=cs_var,
                          date=date_var,
                          is.output=T,

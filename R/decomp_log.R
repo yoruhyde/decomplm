@@ -161,13 +161,15 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
   if(checksum){
 
     decomp=input_data[,c(cs,date,paste(y,"_actual",sep=""),var.list,"sm_base"),with=F]
-    setnames(decomp,c(paste(y,"_actual",sep=""),"sm_base"),c(y,"Base"))
+    # setnames(decomp,c(paste(y,"_actual",sep=""),"sm_base"),c(y,"Base"))
+    m_n=paste(y,"_dep",sep="")
+    setnames(decomp,c(paste(y,"_actual",sep=""),"sm_base"),c(m_n,"Base"))
 
     # prepare table for shiny
-    decomp.list=f_decomp_split(decomp,cs,y,date,input_var)
+    decomp.list=f_decomp_split(decomp,cs,y=m_n,date,input_var)
 
     # plot
-    app=rshiny(decomp.list$con,decomp.list$decomp.chart,date,y)
+    app=rshiny(decomp.list$con,decomp.list$decomp.chart,date,m_n)
 
     if (is.output){
       write.csv(decomp.list$decomp.export,"output_decomp.csv",row.names = F)
