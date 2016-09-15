@@ -37,7 +37,7 @@ Then you can run the code below to get the final decomposition of the main model
 ``` r
 # Get decomp for all models before passing through
 
-decomp_list=get_decomp(input_data=data,
+decomp_list=get_log_decomp(input_data=data,
                        input_var=var,
                        input_layer=layer)
 
@@ -48,7 +48,6 @@ decomp_list=get_decomp(input_data=data,
 
 result=get_reduced_model(decomp_list=decomp_list,
                          layer=layer,
-                         input_var=var,
                          cs=cs_var,
                          date=date_var,
                          is.output=T,
