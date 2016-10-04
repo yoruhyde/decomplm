@@ -20,6 +20,27 @@
 #'    for.plot: table for shiny;
 #'    app: a shiny app;
 #'
+#'
+#'@export
+seperate_decomp=function(is.output.final=T,model_name=NULL) {
+  print("Note: You are using seperate decomp approach across all models")
+  decomp_list=get_log_decomp(input_data=data,
+                             input_var=var,
+                             input_layer=layer)
+
+  result=get_reduced_model(decomp_list=decomp_list,
+                           layer=layer,
+                           input_var=var,
+                           cs=cs_var,
+                           date=date_var,
+                           is.output=is.output.final,
+                           model_name=model_name)
+  return (result)
+}
+
+
+
+
 #' @export
 get_log_decomp=function(input_data,input_var,input_layer) {
   model_nm=input_layer[true_model==1,model_name_group]
@@ -124,7 +145,7 @@ get_reduced_model=function(decomp_list,layer,input_var=var,cs,date,is.output=F,m
     model_name=layer[1,model_name_group]
   }
   model_name_dep=unique(input_var[model_name_group==model_name,model_var])
-  model_name_dep=paste(model_name,"_dep",sep="")
+  model_name_dep=paste(model_name_dep,"_dep",sep="")
   decomp_reduced=decomp_list[[model_name]]
   var.list=colnames(decomp_reduced)[!colnames(decomp_reduced) %in% c(cs,date,model_name_dep,"Base")]
   var_lkup=data.table(var=var.list,var_group=var.list)

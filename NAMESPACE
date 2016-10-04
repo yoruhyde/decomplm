@@ -2,9 +2,13 @@
 
 export(area.hchart)
 export(decomp_log)
+export(direct_pass)
+export(direct_weight)
 export(f_decomp_split)
 export(get_log_decomp)
 export(get_pec)
 export(get_reduced_model)
+export(mixed_approach)
 export(rshiny)
 export(rshiny2)
+export(seperate_decomp)
