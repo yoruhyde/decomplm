@@ -2,9 +2,9 @@
 
 export(area.hchart)
 export(decomp_log)
-export(direct_pass)
 export(direct_weight)
 export(f_decomp_split)
+export(f_direct_pass)
 export(get_log_decomp)
 export(get_pec)
 export(get_reduced_model)

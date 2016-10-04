@@ -1,6 +1,6 @@
 #' @return an updated input_files
 #' @export
-direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
+f_direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
   lower_model=strsplit(lower_model,",")[[1]]
   higher_var=input_var[model_name_group %in% c(higher_model)]
   lower_var=input_var[model_name_group %in% c(lower_model)]
@@ -39,7 +39,7 @@ direct_weight=function(input_layer=layer,input_var=var,
     } else {
       higher_model=input_layer[i,model_name_group]
       lower_model=input_layer[i,var_group]
-      input_var=direct_pass(higher_model,lower_model,input_var=input_var)
+      input_var=f_direct_pass(higher_model,lower_model,input_var=input_var)
     }
 
   }
@@ -82,7 +82,7 @@ mixed_approach = function (input_data=data,input_layer=layer,input_var=var,is.ou
     } else {
       higher_model=layer_direct[i,model_name_group]
       lower_model=layer_direct[i,var_group]
-      input_var=direct_pass(higher_model,lower_model,input_var=input_var)
+      input_var=f_direct_pass(higher_model,lower_model,input_var=input_var)
       layer_direct[i,var_group:=""]
     }
 
@@ -115,12 +115,3 @@ mixed_approach = function (input_data=data,input_layer=layer,input_var=var,is.ou
   return(result)
 
 }
-
-
-# input_layer=layer
-# input_var=var
-# input_data=data
-# cs=cs_var
-# date=date_var
-# is.output.final=F
-# model_name=NULL
