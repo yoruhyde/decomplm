@@ -1,33 +1,9 @@
-#' @return an updated input_files
-#' @export
-f_direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
-  lower_model=strsplit(lower_model,",")[[1]]
-  higher_var=input_var[model_name_group %in% c(higher_model)]
-  lower_var=input_var[model_name_group %in% c(lower_model)]
-  higher_keep=higher_var[!var_group %in% c(lower_model)]
-  higher_pass=higher_var[var_group %in% c(lower_model)]
-
-  #higher keep for keep, higher_pass for pass, lower_var for pass
-
-  setnames(higher_pass,c("var_group","para"),c("key1","para_temp"))
-  setnames(lower_var,"model_name_group","key1")
-  lower_var[,model_var:=NULL]
-  higher_pass[,var:=NULL]
-
-  passed_table=merge(lower_var,higher_pass,by=c(cs,"key1"),all.x=T)
-  passed_table[,para:=para*para_temp]
-  passed_table[,c("para_temp","key1"):=NULL]
-  final=rbind(higher_keep,passed_table)
-  final=final[,lapply(.SD,sum),by=c(colnames(final)[!colnames(final) %in% c("para")])]
-
-
-  #update input_var
-  input_var=input_var[!model_name_group %in% c(higher_model)]
-  input_var=rbind(input_var,final)
-  return (input_var)
-}
-
-
+#' direct_weight:
+#' calculate the decomp for all true & fake models & sub-models by using the algorithm described in 'decomp_log'
+#' @return a list of modeling result. It contains the list of decomp for all models
+#'
+#' mixed_approach:
+#' @return a list of modeling result. It contains the list of decomp for all models
 #' @export
 direct_weight=function(input_layer=layer,input_var=var,
                        input_data=data,cs=cs_var,date=date_var,is.output.final=F,model_name=NULL) {

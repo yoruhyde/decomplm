@@ -115,6 +115,34 @@ area.hchart=function(x,data,date,y){
   a
 }
 
+#' @export
+f_direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
+  lower_model=strsplit(lower_model,",")[[1]]
+  higher_var=input_var[model_name_group %in% c(higher_model)]
+  lower_var=input_var[model_name_group %in% c(lower_model)]
+  higher_keep=higher_var[!var_group %in% c(lower_model)]
+  higher_pass=higher_var[var_group %in% c(lower_model)]
+
+  #higher keep for keep, higher_pass for pass, lower_var for pass
+
+  setnames(higher_pass,c("var_group","para"),c("key1","para_temp"))
+  setnames(lower_var,"model_name_group","key1")
+  lower_var[,model_var:=NULL]
+  higher_pass[,var:=NULL]
+
+  passed_table=merge(lower_var,higher_pass,by=c(cs,"key1"),all.x=T)
+  passed_table[,para:=para*para_temp]
+  passed_table[,c("para_temp","key1"):=NULL]
+  final=rbind(higher_keep,passed_table)
+  final=final[,lapply(.SD,sum),by=c(colnames(final)[!colnames(final) %in% c("para")])]
+
+
+  #update input_var
+  input_var=input_var[!model_name_group %in% c(higher_model)]
+  input_var=rbind(input_var,final)
+  return (input_var)
+}
+
 
 #' @export
 rshiny=function(temp.con,forplot,date,y){
