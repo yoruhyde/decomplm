@@ -7,6 +7,14 @@
 #' @export
 direct_weight=function(input_layer=layer,input_var=var,
                        input_data=data,cs=cs_var,date=date_var,is.output.final=F,model_name=NULL) {
+  # input_layer=layer
+  # input_var=var
+  # input_data=data
+  # cs=cs_var
+  # date=date_var
+  # is.output.final=F
+  # model_name=NULL
+  
   print("Note: You are using direct weighting approach across all models")
   input_layer[,var_group:=as.character(var_group)]
   for (i in nrow(input_layer):1) {
