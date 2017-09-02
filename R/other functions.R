@@ -125,7 +125,7 @@ f_direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
   if(length(unique(lower_var$model_name_group))!=length(lower_model)) {
     print (paste("Cannot find submodel ",
                  paste(lower_model[!lower_model %in% unique(lower_var$model_name_group)],collapse = ","),
-                 " in your input_var file when passing through layer ",i,sep=""))
+                 " in your input_var file when passing through model ",higher_model,sep=""))
     stop()
   }
   higher_keep=higher_var[!var_group %in% c(lower_model)]
