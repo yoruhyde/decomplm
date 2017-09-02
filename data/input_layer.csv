@@ -1,5 +1,5 @@
 layer;model_name_group;var_group;sm_factor;true_model;is_direct
-1;sales;DTS, seo_aff, paid_search, email ;0.05;1;1
+1;sales;dts, seo_aff, paid_search, email ;0.05;1;1
 2;dts;gqv;0.05;1;1
 2;seo_aff;gqv;0.05;1;1
 2;paid_search;;0.05;1;1

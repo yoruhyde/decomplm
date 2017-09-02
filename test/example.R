@@ -7,7 +7,6 @@ library(decomplm) # load package
 #   source(i,local=F)
 # }
 
-
 # set up
 setwd("/Users/yue.meng/Downloads/yin/decomplm/data") # set work directory
 data=fread("input_data.csv") # load data
@@ -17,7 +16,9 @@ layer=fread("input_layer.csv") # load model structure
 date_var="week" # date variable name in input_data
 cs_var=c("SEGMENT","CHANNEL")
 
-
+# data[,EMAIL_OPEN:=1]
+# data[,PS_BG_IMPS:=1]
+# data[,DDROP_3:=1]
 ########################################################
 if.direct=unique(layer$is_direct[!is.na(layer$is_direct)])
 

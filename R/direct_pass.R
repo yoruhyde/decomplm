@@ -32,6 +32,7 @@ direct_weight=function(input_layer=layer,input_var=var,
   }
   input_layer=input_layer[model_name_group==model_name]
   input_layer[,var_group:=""]
+  input_var_main=input_var[model_name_group==model_name]
 
   decomp_list=get_log_decomp(input_data=input_data,
                              input_var=input_var,
@@ -44,7 +45,7 @@ direct_weight=function(input_layer=layer,input_var=var,
                            date=date,
                            is.output=is.output.final,
                            model_name=model_name)
-  return (result)
+  return (list(result,input_var_main))
 }
 
 #' Using this function when you have fake model. But lower then fake model,

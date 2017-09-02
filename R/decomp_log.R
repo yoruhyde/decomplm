@@ -153,7 +153,7 @@ decomp_log=function(input_data,input_var,y,y_m=NULL,date,cs,sm_factor,is.output=
   input_data[,eval(expr)]
   checksum=T
   if (any(abs(input_data$check)>0.1)) {
-    checksum=F
+    # checksum=F
     print("Warning: The decomp result doesn't sum up to actual. Please check the output data.")
   }
 
