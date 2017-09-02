@@ -17,7 +17,7 @@ direct_weight=function(input_layer=layer,input_var=var,
   
   print("Note: You are using direct weighting approach across all models")
   input_layer[,var_group:=as.character(var_group)]
-  for (i in nrow(input_layer):2) {
+  for (i in nrow(input_layer):1) {
     if(input_layer[i, var_group] == "" |is.na(input_layer[i, var_group])) {
       next
     } else {
