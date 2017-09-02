@@ -17,12 +17,12 @@ direct_weight=function(input_layer=layer,input_var=var,
   
   print("Note: You are using direct weighting approach across all models")
   input_layer[,var_group:=as.character(var_group)]
-  for (i in nrow(input_layer):1) {
+  for (i in nrow(input_layer):2) {
     if(input_layer[i, var_group] == "" |is.na(input_layer[i, var_group])) {
       next
     } else {
-      higher_model=input_layer[i,model_name_group]
-      lower_model=input_layer[i,var_group]
+      higher_model=trimws(input_layer[i,model_name_group])
+      lower_model=trimws(input_layer[i,var_group])
       input_var=f_direct_pass(higher_model,lower_model,input_var=input_var)
     }
 

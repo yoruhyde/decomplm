@@ -117,11 +117,29 @@ area.hchart=function(x,data,date,y){
 
 #' @export
 f_direct_pass=function(higher_model,lower_model,input_var=var,cs=cs_var) {
-  lower_model=strsplit(lower_model,",")[[1]]
+  lower_model=trimws(strsplit(lower_model,",")[[1]])
   higher_var=input_var[model_name_group %in% c(higher_model)]
+  if(nrow(higher_var)==0) print(paste("Error: Cannot find the model ",higher_model,sep=""))
   lower_var=input_var[model_name_group %in% c(lower_model)]
+  if(nrow(lower_var)==0) print(paste("Error: Cannot find the model ",lower_model,sep=""))
+  if(length(unique(lower_var$model_name_group))!=length(lower_model)) {
+    print (paste("Cannot find submodel ",
+                 paste(lower_model[!lower_model %in% unique(lower_var$model_name_group)],collapse = ","),
+                 " in your input_var file when passing through layer ",i,sep=""))
+    stop()
+  }
   higher_keep=higher_var[!var_group %in% c(lower_model)]
   higher_pass=higher_var[var_group %in% c(lower_model)]
+  if(nrow(higher_pass)==0){
+    print(paste("Error: Cannot find the variable ",lower_model," in the model ",higher_model,
+                ", Make sure you have ",lower_model," in column E of input_var",sep=""))
+  } 
+  if(length(unique(higher_pass$var_group))!=length(lower_model)) {
+    print(paste("Error: Cannot find the var_group ",
+                paste(lower_model[!lower_model %in% unique(higher_pass$var_group)],collapse = ","),
+                " in the main-model ", higher_model,sep=""))
+    stop()
+  }
 
   #higher keep for keep, higher_pass for pass, lower_var for pass
 
